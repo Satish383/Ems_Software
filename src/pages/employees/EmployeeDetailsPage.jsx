@@ -13,12 +13,14 @@ import {
   ClipboardList,
   FileText,
   TrendingUp,
+  Pencil,
 } from "lucide-react";
 import PageHeader from "@/components/common/PageHeader";
 import Avatar from "@/components/common/Avatar";
 import StatusBadge from "@/components/common/StatusBadge";
 import Tabs from "@/components/common/Tabs";
 import EmptyState from "@/components/common/EmptyState";
+import EditEmployeeModal from "@/components/employees/EditEmployeeModal";
 import { useData } from "@/context/DataContext";
 import { formatCurrency, formatDate } from "@/utils/format";
 
@@ -44,6 +46,7 @@ export default function EmployeeDetailsPage() {
   const { id } = useParams();
   const { employees, attendance, leaves } = useData();
   const [tab, setTab] = useState("overview");
+  const [editOpen, setEditOpen] = useState(false); // <-- new
 
   const employee = employees.find((e) => e.id === id);
 
@@ -106,7 +109,10 @@ export default function EmployeeDetailsPage() {
             <Link to="/employees" className="btn-ghost">
               <ArrowLeft size={15} /> Directory
             </Link>
-            <button className="btn-primary">Edit Profile</button>
+            {/* ---- EDIT PROFILE NOW WORKS ---- */}
+            <button className="btn-primary" onClick={() => setEditOpen(true)}>
+              <Pencil size={15} /> Edit Profile
+            </button>
           </>
         }
       />
@@ -114,7 +120,7 @@ export default function EmployeeDetailsPage() {
       {/* Hero card */}
       <div className="card p-5 sm:p-6">
         <div className="flex flex-col sm:flex-row gap-5 items-start">
-          <Avatar name={employee.name} size="xl" />
+          <Avatar name={employee.name} src={employee.avatar} size="xl" />
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-3">
               <h2 className="text-xl sm:text-2xl font-bold text-ink dark:text-white">
@@ -448,6 +454,13 @@ export default function EmployeeDetailsPage() {
           />
         </div>
       )}
+
+      {/* ------------- EDIT PROFILE MODAL ------------- */}
+      <EditEmployeeModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        employee={employee}
+      />
     </div>
   );
 }
